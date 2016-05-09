@@ -1,0 +1,22 @@
+module INF1822 {
+	interface Device {
+		attribute unsigned long id;
+		attribute string type;
+	};
+
+	interface SensorDevice: Device {
+		void startMonitoring();
+	};
+
+	interface MasterDevice: Device {
+		// ?
+	};
+
+	interface LightDevice: SensorDevice {
+		attribute long lightLevel;
+	};
+
+	interface MovementDevice: SensorDevice {
+		void hasMovement();
+	};
+};
