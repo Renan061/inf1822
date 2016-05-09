@@ -8,3 +8,8 @@
 	criado) na forma:
 
 		NAMESERVICE IOR:<string>
+
+- Dúvidas
+	- Como passar o IOR do naming service por linha de comando para o ORB?
+	- MasterLightDevice conhece todos os LightDevices ou todos os LightDevices
+		conhecem o MasterLightDevice?

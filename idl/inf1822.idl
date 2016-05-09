@@ -4,19 +4,11 @@ module INF1822 {
 		attribute string type;
 	};
 
-	interface SensorDevice: Device {
-		void startMonitoring();
-	};
-
-	interface MasterDevice: Device {
-		// ?
-	};
-
-	interface LightDevice: SensorDevice {
+	interface LightDevice: Device {
 		attribute long lightLevel;
 	};
 
-	interface MovementDevice: SensorDevice {
-		void hasMovement();
+	interface MasterLightDevice: LightDevice {
+		void startMonitoringDevice(inout LightDevice device);
 	};
 };
