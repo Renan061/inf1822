@@ -27,9 +27,9 @@ class MasterLightDeviceImpl(INF1822__POA.MasterLightDevice):
 		return True
 
 	def getDeviceForId(self, id):
-		# for device in self._deviceList:
-		# 	if device.id == id:
-		# 		return device
+		for device in self.__deviceList:
+			if device.id == id:
+				return device
 		return None
 
 class LightDeviceImpl(INF1822__POA.LightDevice):
@@ -52,6 +52,7 @@ class LightDeviceImpl(INF1822__POA.LightDevice):
 	def _listen(self):
 		while True:
 			value = self.values[self.index]
+			self.lightLevel = value
 			print "Valor de luminosidade lido: " + str(value)
 			self.index += 1
 			self.index = 0 if self.index == len(self.values) - 1 else self.index + 1

@@ -30,8 +30,20 @@ if not ok:
 	print("Error with registering of master light device")
 	sys.exit(1)
 
-# Running
+# POA
 orbManager.activatePoa()
-orbManager.runOrb()
+
+# Real program
+while True:
+	value = input("Device ID: ")
+	if value == -1:
+		break
+	device = masterServant.getDeviceForId(value)
+	if device is None:
+		print "Device with id " + str(value) + " not found"
+	else:
+		print "Device light level is " + str(device.lightLevel)
+
+# orbManager.runOrb()
 
 print "Server finished..."

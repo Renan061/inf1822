@@ -9,6 +9,5 @@ omniORB.updateModule("INF1822")
 import inf1822_idl
 
 # ** 2. Sub-modules
-import NamingService
 
 # ** 3. End
