@@ -12,3 +12,29 @@ module INF1822 {
 		void startMonitoringDevice(inout LightDevice device);
 	};
 };
+
+module NamingService {
+	// Fazer um Enum com os tipos (como fica em Python?)
+
+	interface ObjectManager {
+		// Usado por um objeto para se registrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean register(in string ior, in string name, in string type);
+
+		// Usado por um objeto para se desregistrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean deregister(in string ior, in string name);
+
+		// Retorna o IOR de um objeto dado seu nome.
+		// Pode retornar um erro caso o objeto não exista.
+		string getByName(in string name)
+
+		// Retorna uma lista de IORs de objetos registrados pertencentes
+		// ao tipo passado. Pode retornar uma lista vazia.
+		sequence<string> getByType(in string type)
+
+		// Retorna o IOR de um objeto que é o "master" de seu tipo. 
+		// Pode retornar um erro caso o objeto não exista.
+		string getMasterForType(in string type)
+	};
+};
