@@ -9,7 +9,10 @@
 
 		NAMESERVICE IOR:<string>
 
+- PyInstaller
+	- Na pasta do projeto criar um diretório /build, navegar para ele e
+	rodar "pyinstaller ../<filename>.py --onefile".
+
 - Dúvidas
-	- Como passar o IOR do naming service por linha de comando para o ORB?
 	- MasterLightDevice conhece todos os LightDevices ou todos os LightDevices
 		conhecem o MasterLightDevice?

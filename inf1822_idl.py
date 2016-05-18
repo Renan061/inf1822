@@ -194,11 +194,110 @@ omniORB.registerSkeleton(MasterLightDevice._NP_RepositoryId, MasterLightDevice)
 del MasterLightDevice
 __name__ = "INF1822"
 
+# enum ObjectType
+_0_INF1822.MasterLightDeviceType = omniORB.EnumItem("MasterLightDeviceType", 0)
+_0_INF1822.LightDeviceType = omniORB.EnumItem("LightDeviceType", 1)
+_0_INF1822.ObjectType = omniORB.Enum("IDL:INF1822/ObjectType:1.0", (_0_INF1822.MasterLightDeviceType, _0_INF1822.LightDeviceType,))
+
+_0_INF1822._d_ObjectType  = (omniORB.tcInternal.tv_enum, _0_INF1822.ObjectType._NP_RepositoryId, "ObjectType", _0_INF1822.ObjectType._items)
+_0_INF1822._tc_ObjectType = omniORB.tcInternal.createTypeCode(_0_INF1822._d_ObjectType)
+omniORB.registerType(_0_INF1822.ObjectType._NP_RepositoryId, _0_INF1822._d_ObjectType, _0_INF1822._tc_ObjectType)
+
 #
 # End of module "INF1822"
 #
 __name__ = "inf1822_idl"
 
-_exported_modules = ( "INF1822", )
+
+#
+# Start of module "NamingService"
+#
+__name__ = "NamingService"
+_0_NamingService = omniORB.openModule("NamingService", r"idl/inf1822.idl")
+_0_NamingService__POA = omniORB.openModule("NamingService__POA", r"idl/inf1822.idl")
+
+
+# typedef ... IORList
+class IORList:
+    _NP_RepositoryId = "IDL:NamingService/IORList:1.0"
+    def __init__(self, *args, **kw):
+        raise RuntimeError("Cannot construct objects of this type.")
+_0_NamingService.IORList = IORList
+_0_NamingService._d_IORList  = (omniORB.tcInternal.tv_sequence, (omniORB.tcInternal.tv_string,0), 0)
+_0_NamingService._ad_IORList = (omniORB.tcInternal.tv_alias, IORList._NP_RepositoryId, "IORList", (omniORB.tcInternal.tv_sequence, (omniORB.tcInternal.tv_string,0), 0))
+_0_NamingService._tc_IORList = omniORB.tcInternal.createTypeCode(_0_NamingService._ad_IORList)
+omniORB.registerType(IORList._NP_RepositoryId, _0_NamingService._ad_IORList, _0_NamingService._tc_IORList)
+del IORList
+
+# interface ObjectManager
+_0_NamingService._d_ObjectManager = (omniORB.tcInternal.tv_objref, "IDL:NamingService/ObjectManager:1.0", "ObjectManager")
+omniORB.typeMapping["IDL:NamingService/ObjectManager:1.0"] = _0_NamingService._d_ObjectManager
+_0_NamingService.ObjectManager = omniORB.newEmptyClass()
+class ObjectManager :
+    _NP_RepositoryId = _0_NamingService._d_ObjectManager[1]
+
+    def __init__(self, *args, **kw):
+        raise RuntimeError("Cannot construct objects of this type.")
+
+    _nil = CORBA.Object._nil
+
+
+_0_NamingService.ObjectManager = ObjectManager
+_0_NamingService._tc_ObjectManager = omniORB.tcInternal.createTypeCode(_0_NamingService._d_ObjectManager)
+omniORB.registerType(ObjectManager._NP_RepositoryId, _0_NamingService._d_ObjectManager, _0_NamingService._tc_ObjectManager)
+
+# ObjectManager operations and attributes
+ObjectManager._d_register = (((omniORB.tcInternal.tv_string,0), (omniORB.tcInternal.tv_string,0), (omniORB.tcInternal.tv_string,0)), (omniORB.tcInternal.tv_boolean, ), None)
+ObjectManager._d_deregister = (((omniORB.tcInternal.tv_string,0), (omniORB.tcInternal.tv_string,0)), (omniORB.tcInternal.tv_boolean, ), None)
+ObjectManager._d_getByName = (((omniORB.tcInternal.tv_string,0), ), ((omniORB.tcInternal.tv_string,0), ), None)
+ObjectManager._d_getByType = (((omniORB.tcInternal.tv_string,0), ), (omniORB.typeMapping["IDL:NamingService/IORList:1.0"], ), None)
+ObjectManager._d_getMasterForType = (((omniORB.tcInternal.tv_string,0), ), ((omniORB.tcInternal.tv_string,0), ), None)
+
+# ObjectManager object reference
+class _objref_ObjectManager (CORBA.Object):
+    _NP_RepositoryId = ObjectManager._NP_RepositoryId
+
+    def __init__(self, obj):
+        CORBA.Object.__init__(self, obj)
+
+    def register(self, *args):
+        return self._obj.invoke("register", _0_NamingService.ObjectManager._d_register, args)
+
+    def deregister(self, *args):
+        return self._obj.invoke("deregister", _0_NamingService.ObjectManager._d_deregister, args)
+
+    def getByName(self, *args):
+        return self._obj.invoke("getByName", _0_NamingService.ObjectManager._d_getByName, args)
+
+    def getByType(self, *args):
+        return self._obj.invoke("getByType", _0_NamingService.ObjectManager._d_getByType, args)
+
+    def getMasterForType(self, *args):
+        return self._obj.invoke("getMasterForType", _0_NamingService.ObjectManager._d_getMasterForType, args)
+
+omniORB.registerObjref(ObjectManager._NP_RepositoryId, _objref_ObjectManager)
+_0_NamingService._objref_ObjectManager = _objref_ObjectManager
+del ObjectManager, _objref_ObjectManager
+
+# ObjectManager skeleton
+__name__ = "NamingService__POA"
+class ObjectManager (PortableServer.Servant):
+    _NP_RepositoryId = _0_NamingService.ObjectManager._NP_RepositoryId
+
+
+    _omni_op_d = {"register": _0_NamingService.ObjectManager._d_register, "deregister": _0_NamingService.ObjectManager._d_deregister, "getByName": _0_NamingService.ObjectManager._d_getByName, "getByType": _0_NamingService.ObjectManager._d_getByType, "getMasterForType": _0_NamingService.ObjectManager._d_getMasterForType}
+
+ObjectManager._omni_skeleton = ObjectManager
+_0_NamingService__POA.ObjectManager = ObjectManager
+omniORB.registerSkeleton(ObjectManager._NP_RepositoryId, ObjectManager)
+del ObjectManager
+__name__ = "NamingService"
+
+#
+# End of module "NamingService"
+#
+__name__ = "inf1822_idl"
+
+_exported_modules = ( "INF1822", "NamingService")
 
 # The end.
