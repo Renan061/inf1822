@@ -11,15 +11,20 @@ import time, threading
 
 class MasterLightDeviceImpl(INF1822__POA.MasterLightDevice):
 	# Default constructor
-	def __init__(self, id, type):
+	def __init__(self, orbManager, id, type):
+		self.__orbManager = orbManager
+		self.__deviceList = []
 		self.id = id
 		self.type = type
 		self.lightLevel = -1
 
-	def startMonitoringDevice(self, device):
-		print "Started monitoring device " + str(device.id)
-		# self._deviceList.append(device)
-		# print self._deviceList
+	def startMonitoringDevice(self, deviceIor):
+		device = self.__orbManager.getObjectFrom(deviceIor, INF1822.LightDevice)
+		if device is None:
+			return False
+		self.__deviceList.append(device)
+		print "Started monitoring device"
+		return True
 
 	def getDeviceForId(self, id):
 		# for device in self._deviceList:

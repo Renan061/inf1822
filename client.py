@@ -13,51 +13,41 @@ print "Client started..."
 
 # Setup
 orbManager = aux.ORBManager()
+orbManager.initializePoa()
 
 # Naming service
 objectManagerIor = aux.readIorFromFile("naming-service-ior.txt")
-objectManager = orbManager.getObjectFrom(objectManagerIor,
-	NamingService.ObjectManager):
+objectManager = orbManager.getObjectFrom(objectManagerIor, NamingService.ObjectManager)
 if objectManager is None:
-	print "Error with object manager reference"
-    sys.exit(1)
+	print("Error with object manager reference")
+	sys.exit(1)
 
 
 # MasterLightDevice
 masterIor = objectManager.getByName("MasterLightDevice")
-master = orbManager.getObjectFrom(masterIor,
-	INF1822.MasterLightDevice):
+master = orbManager.getObjectFrom(masterIor, INF1822.MasterLightDevice)
 if master is None:
-    print "Error with master reference"
-    sys.exit(1)
+	print("Error with master reference")
+	sys.exit(1)
 
-print(master.id)
+# LightDevice
+lightDeviceServant = aux.LightDeviceImpl(2, "light", [120, 50, 140, 20, 100,
+	90, 60, 80, 40, 110, 10, 150, 30, 130])
+lightDeviceIor = orbManager.getIorFrom(lightDeviceServant)
+ok = objectManager.register(lightDeviceIor, "LightDevice", "sensor");
+if not ok:
+	print("Error with registering of light device")
+	sys.exit(1)
 
-# # LightDevice
-# # Object implementation
-# lightDeviceServant = LightDeviceServant(2, "light", [120, 50, 140, 20, 100,
-# 	90, 60, 80, 40, 110, 10, 150, 30, 130])
-# lightDevice = lightDeviceServant._this() # How does this work?
+# Doing something
+ok = master.startMonitoringDevice(lightDeviceIor)
+if not ok:
+	print("Error when starting to monitor a light device")
+	sys.exit(1)
+lightDeviceServant.start()
 
-# # Bind the Device object to the test context
-# name = [CosNaming.NameComponent("INF1822LightDevice" + str(lightDeviceServant.id), "Object")]
-# try:
-#     objectManager.context.bind(name, lightDevice)
-#     print "New INF1822LightDevice object bound"
-# except CosNaming.NamingContext.AlreadyBound:
-#     objectManager.context.rebind(name, lightDevice)
-#     print "INF1822LightDevice binding already existed -- rebound"
-
-# # Activate the POA
-# objectManager.poa._get_the_POAManager().activate()
-
-# #
-# # Doing something
-# #
-# master.startMonitoringDevice(lightDevice)
-# lightDeviceServant.start()
-
-# Run ORB
+# Running
+orbManager.activatePoa()
 orbManager.runOrb()
 
 print "Client finished..."

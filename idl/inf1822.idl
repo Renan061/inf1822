@@ -9,7 +9,7 @@ module INF1822 {
 	};
 
 	interface MasterLightDevice: LightDevice {
-		void startMonitoringDevice(inout LightDevice device);
+		boolean startMonitoringDevice(in string deviceIor);
 	};
 
 	// Possible types for device (incomplete).

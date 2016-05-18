@@ -17,19 +17,18 @@ orbManager.initializePoa()
 
 # Naming service
 objectManagerIor = aux.readIorFromFile("naming-service-ior.txt")
-objectManager = orbManager.getObjectFrom(objectManagerIor,
-	NamingService.ObjectManager)
+objectManager = orbManager.getObjectFrom(objectManagerIor, NamingService.ObjectManager)
 if objectManager is None:
 	print("Error with object manager reference")
 	sys.exit(1)
 
 # MasterLightDevice
-masterServant = aux.MasterLightDeviceImpl(1, "master")
-masterIor = aux.getIorFrom(masterServant)
+masterServant = aux.MasterLightDeviceImpl(orbManager, 1, "master")
+masterIor = orbManager.getIorFrom(masterServant)
 ok = objectManager.register(masterIor, "MasterLightDevice", "master");
 if not ok:
 	print("Error with registering of master light device")
-    sys.exit(1)
+	sys.exit(1)
 
 # Running
 orbManager.activatePoa()

@@ -163,7 +163,7 @@ _0_INF1822._tc_MasterLightDevice = omniORB.tcInternal.createTypeCode(_0_INF1822.
 omniORB.registerType(MasterLightDevice._NP_RepositoryId, _0_INF1822._d_MasterLightDevice, _0_INF1822._tc_MasterLightDevice)
 
 # MasterLightDevice operations and attributes
-MasterLightDevice._d_startMonitoringDevice = ((omniORB.typeMapping["IDL:INF1822/LightDevice:1.0"], ), (omniORB.typeMapping["IDL:INF1822/LightDevice:1.0"], ), None)
+MasterLightDevice._d_startMonitoringDevice = (((omniORB.tcInternal.tv_string,0), ), (omniORB.tcInternal.tv_boolean, ), None)
 
 # MasterLightDevice object reference
 class _objref_MasterLightDevice (_0_INF1822._objref_LightDevice):
