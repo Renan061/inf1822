@@ -1,7 +1,19 @@
 module INF1822 {
+
+	// ==================================================
+	//
+	//	Main
+	//
+	// ==================================================
+
+	enum DeviceType {
+		MasterLightDeviceType,
+		LightDeviceType
+	};
+
 	interface Device {
 		attribute unsigned long id;
-		attribute string type;
+		attribute DeviceType type;
 	};
 
 	interface LightDevice: Device {
@@ -12,21 +24,20 @@ module INF1822 {
 		boolean startMonitoringDevice(in string deviceIor);
 	};
 
-	// Possible types for device (incomplete).
-	enum ObjectType {
-		MasterLightDeviceType,
-		LightDeviceType
-	};
-};
+	// ==================================================
+	//
+	//	Naming Service
+	//
+	// ==================================================
 
-module NamingService {
-	// A list of IORs.
+	// Uma lista de IORs
 	typedef sequence<string> IORList;
 
-	interface ObjectManager {
+	// Implementação de um serviço de catálogo
+	interface Catalogue {
 		// Usado por um objeto para se registrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean register(in string ior, in string name, in string type);
+		boolean register(in string ior, in string name, in DeviceType type);
 
 		// Usado por um objeto para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
@@ -38,10 +49,10 @@ module NamingService {
 
 		// Retorna uma lista de IORs de objetos registrados pertencentes
 		// ao tipo passado. Pode retornar uma lista vazia.
-		IORList getByType(in string type);
+		IORList getByType(in DeviceType type);
 
 		// Retorna o IOR de um objeto que é o "master" de seu tipo. 
 		// Pode retornar um erro caso o objeto não exista.
-		string getMasterForType(in string type);
+		string getMasterForType(in LightDeviceType type);
 	};
 };

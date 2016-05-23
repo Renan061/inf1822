@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import aux, INF1822, NamingService
+import aux, INF1822
 
 # ==================================================
 #
@@ -14,24 +14,22 @@ print "Server started..."
 # ORB setup
 orbManager = aux.ORBManager()
 orbManager.initializePoa()
+orbManager.activatePoa()
 
 # Naming service
-objectManagerIor = aux.readIorFromFile("naming-service-ior.txt")
-objectManager = orbManager.getObjectFrom(objectManagerIor, NamingService.ObjectManager)
-if objectManager is None:
-	print("Error with object manager reference")
+catalogueIor = aux.readIorFromFile("naming-service-ior.txt")
+catalogue = orbManager.getStubFrom(catalogueIor, INF1822.Catalogue)
+if catalogue is None:
+	print("Error with catalogue reference")
 	sys.exit(1)
 
 # MasterLightDevice
 masterServant = aux.MasterLightDeviceImpl(orbManager, 1, "master")
 masterIor = orbManager.getIorFrom(masterServant)
-ok = objectManager.register(masterIor, "MasterLightDevice", "master");
+ok = catalogue.register(masterIor, "master", INF1822.MasterLightDeviceType) # TODO: Device name
 if not ok:
 	print("Error with registering of master light device")
 	sys.exit(1)
-
-# POA
-orbManager.activatePoa()
 
 # Real program
 while True:
@@ -43,7 +41,5 @@ while True:
 		print "Device with id " + str(value) + " not found"
 	else:
 		print "Device light level is " + str(device.lightLevel)
-
-# orbManager.runOrb()
 
 print "Server finished..."

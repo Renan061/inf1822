@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-#coding=utf-8
 
 import aux
-import NamingService, NamingService__POA
+import INF1822, INF1822__POA
 
 # ==================================================
 #
@@ -10,51 +9,41 @@ import NamingService, NamingService__POA
 #
 # ==================================================
 
-class ObjectManagerImpl(NamingService__POA.ObjectManager):
+class CatalogueImpl(INF1822__POA.Catalogue):
 	# Default constructor
 	def __init__(self):
-		self.__dictionary = {}
+		self._dictionary = {}
 
-	# Usado por um objeto para se registrar junto ao serviço.
-	# Pode retornar false caso algum erro tenha ocorrido.
 	def register(self, ior, name, type):
 		# Check if name is string
 		# Check if ior is string
-		if self.__dictionary.has_key(name):
+		if self._dictionary.has_key(name):
 			# FIXME: Return more information
 			# return False
 			return True
-		self.__dictionary[name] = ior
+		self._dictionary[name] = ior
 		# TODO: Do something with type
-		print("Registered <" + name + "> of type <" + type +">")
+		print("Registered <" + name + ">")
 		return True
 
-	# Usado por um objeto para se desregistrar junto ao serviço.
-	# Pode retornar false caso algum erro tenha ocorrido.
 	def deregister(self, ior, name):
 		# TODO
-		print("ObjectManagerImpl deregister")
+		print("CatalogueImpl deregister")
 		return False
 
-	# Retorna o IOR de um objeto dado seu nome.
-	# Pode retornar um erro caso o objeto não exista.
 	def getByName(self, name):
-		if self.__dictionary.has_key(name):
-			return self.__dictionary[name]
+		if self._dictionary.has_key(name):
+			return self._dictionary[name]
 		return "error"
 
-	# Retorna uma lista de IORs de objetos registrados pertencentes
-	# ao tipo passado. Pode retornar uma lista vazia.
 	def getByType(self, type):
 		# TODO
-		print("ObjectManagerImpl getByType")
+		print("CatalogueImpl getByType")
 		return ["not", "-", "implemented"]
 
-	# Retorna o IOR de um objeto que é o "master" de seu tipo. 
-	# Pode retornar um erro caso o objeto não exista.
 	def getMasterForType(self, type):
 		# TODO
-		print("ObjectManagerImpl getMasterForType")
+		print("CatalogueImpl getMasterForType")
 		return "not-implemented"
 
 # ==================================================
@@ -70,8 +59,8 @@ orbManager = aux.ORBManager()
 orbManager.initializePoa()
 
 # Doing stuff
-objectManagerServant = ObjectManagerImpl()
-ior = orbManager.getIorFrom(objectManagerServant)
+catalogueServant = CatalogueImpl()
+ior = orbManager.getIorFrom(catalogueServant)
 aux.writeIorToFile(ior, "naming-service-ior.txt")
 
 # Runnig

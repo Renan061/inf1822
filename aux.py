@@ -12,22 +12,22 @@ import time, threading
 class MasterLightDeviceImpl(INF1822__POA.MasterLightDevice):
 	# Default constructor
 	def __init__(self, orbManager, id, type):
-		self.__orbManager = orbManager
-		self.__deviceList = []
+		self._orbManager = orbManager
+		self._deviceList = []
 		self.id = id
 		self.type = type
 		self.lightLevel = -1
 
 	def startMonitoringDevice(self, deviceIor):
-		device = self.__orbManager.getObjectFrom(deviceIor, INF1822.LightDevice)
+		device = self._orbManager.getStubFrom(deviceIor, INF1822.LightDevice)
 		if device is None:
 			return False
-		self.__deviceList.append(device)
+		self._deviceList.append(device)
 		print "Started monitoring device"
 		return True
 
 	def getDeviceForId(self, id):
-		for device in self.__deviceList:
+		for device in self._deviceList:
 			if device.id == id:
 				return device
 		return None
@@ -67,24 +67,24 @@ class LightDeviceImpl(INF1822__POA.LightDevice):
 class ORBManager:
 	# Default constructor
 	def __init__(self):
-		self.__orb = CORBA.ORB_init(sys.argv, CORBA.ORB_ID)
+		self._orb = CORBA.ORB_init(sys.argv, CORBA.ORB_ID)
 
 	def initializePoa(self):
-		self.__poa = self.__orb.resolve_initial_references("RootPOA")
+		self._poa = self._orb.resolve_initial_references("RootPOA")
 
 	def activatePoa(self):
-		self.__poa._get_the_POAManager().activate()
+		self._poa._get_the_POAManager().activate()
 
 	def runOrb(self):
-		self.__orb.run()
+		self._orb.run()
 
 	# TODO: Should this return an error
 	def getIorFrom(self, objectServant):
 		objectReference = objectServant._this()
-		return self.__orb.object_to_string(objectReference)
+		return self._orb.object_to_string(objectReference)
 
-	def getObjectFrom(self, objectIor, objectClass):
-		objectReference = self.__orb.string_to_object(objectIor)
+	def getStubFrom(self, objectIor, objectClass):
+		objectReference = self._orb.string_to_object(objectIor)
 		return objectReference._narrow(objectClass)
 
 # ==================================================
