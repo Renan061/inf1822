@@ -2,14 +2,15 @@
 
 import sys
 import aux, INF1822
+from omniORB import CORBA
 
 # ==================================================
 #
-#	Server
+#	Master
 #
 # ==================================================
 
-print "Server started..."
+print "Master started..."
 
 # ORB setup
 orbManager = aux.ORBManager()
@@ -24,9 +25,13 @@ if catalogue is None:
 	sys.exit(1)
 
 # MasterLightDevice
-masterServant = aux.MasterLightDeviceImpl(orbManager, 1, "master")
+masterServant = aux.MasterLightDeviceImpl(orbManager, 1, INF1822.MasterLightDeviceType)
 masterIor = orbManager.getIorFrom(masterServant)
-ok = catalogue.register(masterIor, "master", INF1822.MasterLightDeviceType) # TODO: Device name
+try:
+	ok = catalogue.registerMaster(masterIor, INF1822.LightDeviceType)
+except CORBA.TRANSIENT:
+	print("Error catalogue.registerMaster (CORBA.TRANSIENT)")
+	sys.exit(1)
 if not ok:
 	print("Error with registering of master light device")
 	sys.exit(1)
@@ -40,6 +45,13 @@ while True:
 	if device is None:
 		print "Device with id " + str(value) + " not found"
 	else:
-		print "Device light level is " + str(device.lightLevel)
+		try:
+			print "Device light level is " + str(device.lightLevel)
+		except CORBA.TRANSIENT:
+			print("Error device.lightLevel (CORBA.TRANSIENT)")
 
-print "Server finished..."
+ok = catalogue.deregisterMaster(masterIor, masterServant.type)
+if not ok:
+	print("Error with deregistering of master light device")
+
+print "Master finished..."

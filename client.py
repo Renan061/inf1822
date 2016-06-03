@@ -2,6 +2,7 @@
 
 import sys
 import aux, INF1822
+from omniORB import CORBA
 
 # ==================================================
 #
@@ -15,6 +16,8 @@ print "Client started..."
 orbManager = aux.ORBManager()
 orbManager.initializePoa()
 orbManager.activatePoa()
+lightDeviceServant = aux.LightDeviceImpl(2, INF1822.LightDeviceType, [10, 20,
+	30, 40])
 
 # Naming service
 catalogueIor = aux.readIorFromFile("naming-service-ior.txt")
@@ -24,19 +27,26 @@ if catalogue is None:
 	sys.exit(1)
 
 # MasterLightDevice
-masterIor = catalogue.getByName("master")
-master = orbManager.getStubFrom(masterIor, INF1822.MasterLightDevice)
-if master is None:
-	print("Error with master reference")
+masterIor = catalogue.getMasterForType(lightDeviceServant.type)
+if not masterIor:
+	print("Error master not registered")
 	sys.exit(1)
+master = orbManager.getStubFrom(masterIor, INF1822.MasterLightDevice)
 
 # LightDevice
-lightDeviceServant = aux.LightDeviceImpl(2, INF1822.LightDeviceType, [120, 50,
-	140, 20, 100, 90, 60, 80, 40, 110, 10, 150, 30, 130])
 lightDeviceIor = orbManager.getIorFrom(lightDeviceServant)
-ok = catalogue.register(lightDeviceIor, "light", INF1822.LightDeviceType);
+lightDeviceName = "light" + str(lightDeviceServant.id)
+try:
+	ok = catalogue.register(lightDeviceIor, lightDeviceName, INF1822.LightDeviceType);
+except CORBA.TRANSIENT:
+	print("Error catalogue.register (CORBA.TRANSIENT)")
+	sys.exit(1)
 if not ok:
 	print("Error with registering of light device")
+	sys.exit(1)
+
+if not master:
+	print("Error with master reference")
 	sys.exit(1)
 
 # Doing something

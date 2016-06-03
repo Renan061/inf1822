@@ -1,4 +1,17 @@
+
 module INF1822 {
+
+	// ==================================================
+	//
+	//	Types
+	//
+	// ==================================================
+
+	// Um IOR
+	typedef string IOR;
+
+	// Uma lista de IORs
+	typedef sequence<IOR> IORList;
 
 	// ==================================================
 	//
@@ -21,7 +34,7 @@ module INF1822 {
 	};
 
 	interface MasterLightDevice: LightDevice {
-		boolean startMonitoringDevice(in string deviceIor);
+		boolean startMonitoringDevice(in IOR deviceIor);
 	};
 
 	// ==================================================
@@ -30,22 +43,27 @@ module INF1822 {
 	//
 	// ==================================================
 
-	// Uma lista de IORs
-	typedef sequence<string> IORList;
-
 	// Implementação de um serviço de catálogo
 	interface Catalogue {
 		// Usado por um objeto para se registrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean register(in string ior, in string name, in DeviceType type);
+		boolean register(in IOR deviceIor, in string name, in DeviceType type);
+
+		// Usado por um objeto "master" para se registrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean registerMaster(in IOR deviceIor, in DeviceType type);
 
 		// Usado por um objeto para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean deregister(in string ior, in string name);
+		boolean deregister(in IOR deviceIor, in string name);
+
+		// Usado por um objeto "master" para se desregistrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean deregisterMaster(in IOR deviceIor);
 
 		// Retorna o IOR de um objeto dado seu nome.
 		// Pode retornar um erro caso o objeto não exista.
-		string getByName(in string name);
+		IOR getByName(in string name);
 
 		// Retorna uma lista de IORs de objetos registrados pertencentes
 		// ao tipo passado. Pode retornar uma lista vazia.
@@ -53,6 +71,6 @@ module INF1822 {
 
 		// Retorna o IOR de um objeto que é o "master" de seu tipo. 
 		// Pode retornar um erro caso o objeto não exista.
-		string getMasterForType(in LightDeviceType type);
+		IOR getMasterForType(in DeviceType type);
 	};
 };
