@@ -23,6 +23,39 @@ _0_INF1822 = omniORB.openModule("INF1822", r"idl/inf1822.idl")
 _0_INF1822__POA = omniORB.openModule("INF1822__POA", r"idl/inf1822.idl")
 
 
+# typedef ... IOR
+class IOR:
+    _NP_RepositoryId = "IDL:INF1822/IOR:1.0"
+    def __init__(self, *args, **kw):
+        raise RuntimeError("Cannot construct objects of this type.")
+_0_INF1822.IOR = IOR
+_0_INF1822._d_IOR  = (omniORB.tcInternal.tv_string,0)
+_0_INF1822._ad_IOR = (omniORB.tcInternal.tv_alias, IOR._NP_RepositoryId, "IOR", (omniORB.tcInternal.tv_string,0))
+_0_INF1822._tc_IOR = omniORB.tcInternal.createTypeCode(_0_INF1822._ad_IOR)
+omniORB.registerType(IOR._NP_RepositoryId, _0_INF1822._ad_IOR, _0_INF1822._tc_IOR)
+del IOR
+
+# typedef ... IORList
+class IORList:
+    _NP_RepositoryId = "IDL:INF1822/IORList:1.0"
+    def __init__(self, *args, **kw):
+        raise RuntimeError("Cannot construct objects of this type.")
+_0_INF1822.IORList = IORList
+_0_INF1822._d_IORList  = (omniORB.tcInternal.tv_sequence, omniORB.typeMapping["IDL:INF1822/IOR:1.0"], 0)
+_0_INF1822._ad_IORList = (omniORB.tcInternal.tv_alias, IORList._NP_RepositoryId, "IORList", (omniORB.tcInternal.tv_sequence, omniORB.typeMapping["IDL:INF1822/IOR:1.0"], 0))
+_0_INF1822._tc_IORList = omniORB.tcInternal.createTypeCode(_0_INF1822._ad_IORList)
+omniORB.registerType(IORList._NP_RepositoryId, _0_INF1822._ad_IORList, _0_INF1822._tc_IORList)
+del IORList
+
+# enum DeviceType
+_0_INF1822.MasterLightDeviceType = omniORB.EnumItem("MasterLightDeviceType", 0)
+_0_INF1822.LightDeviceType = omniORB.EnumItem("LightDeviceType", 1)
+_0_INF1822.DeviceType = omniORB.Enum("IDL:INF1822/DeviceType:1.0", (_0_INF1822.MasterLightDeviceType, _0_INF1822.LightDeviceType,))
+
+_0_INF1822._d_DeviceType  = (omniORB.tcInternal.tv_enum, _0_INF1822.DeviceType._NP_RepositoryId, "DeviceType", _0_INF1822.DeviceType._items)
+_0_INF1822._tc_DeviceType = omniORB.tcInternal.createTypeCode(_0_INF1822._d_DeviceType)
+omniORB.registerType(_0_INF1822.DeviceType._NP_RepositoryId, _0_INF1822._d_DeviceType, _0_INF1822._tc_DeviceType)
+
 # interface Device
 _0_INF1822._d_Device = (omniORB.tcInternal.tv_objref, "IDL:INF1822/Device:1.0", "Device")
 omniORB.typeMapping["IDL:INF1822/Device:1.0"] = _0_INF1822._d_Device
@@ -43,8 +76,8 @@ omniORB.registerType(Device._NP_RepositoryId, _0_INF1822._d_Device, _0_INF1822._
 # Device operations and attributes
 Device._d__get_id = ((),(omniORB.tcInternal.tv_ulong,),None)
 Device._d__set_id = ((omniORB.tcInternal.tv_ulong,),(),None)
-Device._d__get_type = ((),((omniORB.tcInternal.tv_string,0),),None)
-Device._d__set_type = (((omniORB.tcInternal.tv_string,0),),(),None)
+Device._d__get_type = ((),(omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"],),None)
+Device._d__set_type = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"],),(),None)
 
 # Device object reference
 class _objref_Device (CORBA.Object):
@@ -89,103 +122,11 @@ omniORB.registerSkeleton(Device._NP_RepositoryId, Device)
 del Device
 __name__ = "INF1822"
 
-# interface SensorDevice
-_0_INF1822._d_SensorDevice = (omniORB.tcInternal.tv_objref, "IDL:INF1822/SensorDevice:1.0", "SensorDevice")
-omniORB.typeMapping["IDL:INF1822/SensorDevice:1.0"] = _0_INF1822._d_SensorDevice
-_0_INF1822.SensorDevice = omniORB.newEmptyClass()
-class SensorDevice (_0_INF1822.Device):
-    _NP_RepositoryId = _0_INF1822._d_SensorDevice[1]
-
-    def __init__(self, *args, **kw):
-        raise RuntimeError("Cannot construct objects of this type.")
-
-    _nil = CORBA.Object._nil
-
-
-_0_INF1822.SensorDevice = SensorDevice
-_0_INF1822._tc_SensorDevice = omniORB.tcInternal.createTypeCode(_0_INF1822._d_SensorDevice)
-omniORB.registerType(SensorDevice._NP_RepositoryId, _0_INF1822._d_SensorDevice, _0_INF1822._tc_SensorDevice)
-
-# SensorDevice operations and attributes
-SensorDevice._d_startMonitoring = ((), (), None)
-
-# SensorDevice object reference
-class _objref_SensorDevice (_0_INF1822._objref_Device):
-    _NP_RepositoryId = SensorDevice._NP_RepositoryId
-
-    def __init__(self, obj):
-        _0_INF1822._objref_Device.__init__(self, obj)
-
-    def startMonitoring(self, *args):
-        return self._obj.invoke("startMonitoring", _0_INF1822.SensorDevice._d_startMonitoring, args)
-
-omniORB.registerObjref(SensorDevice._NP_RepositoryId, _objref_SensorDevice)
-_0_INF1822._objref_SensorDevice = _objref_SensorDevice
-del SensorDevice, _objref_SensorDevice
-
-# SensorDevice skeleton
-__name__ = "INF1822__POA"
-class SensorDevice (_0_INF1822__POA.Device):
-    _NP_RepositoryId = _0_INF1822.SensorDevice._NP_RepositoryId
-
-
-    _omni_op_d = {"startMonitoring": _0_INF1822.SensorDevice._d_startMonitoring}
-    _omni_op_d.update(_0_INF1822__POA.Device._omni_op_d)
-
-SensorDevice._omni_skeleton = SensorDevice
-_0_INF1822__POA.SensorDevice = SensorDevice
-omniORB.registerSkeleton(SensorDevice._NP_RepositoryId, SensorDevice)
-del SensorDevice
-__name__ = "INF1822"
-
-# interface MasterDevice
-_0_INF1822._d_MasterDevice = (omniORB.tcInternal.tv_objref, "IDL:INF1822/MasterDevice:1.0", "MasterDevice")
-omniORB.typeMapping["IDL:INF1822/MasterDevice:1.0"] = _0_INF1822._d_MasterDevice
-_0_INF1822.MasterDevice = omniORB.newEmptyClass()
-class MasterDevice (_0_INF1822.Device):
-    _NP_RepositoryId = _0_INF1822._d_MasterDevice[1]
-
-    def __init__(self, *args, **kw):
-        raise RuntimeError("Cannot construct objects of this type.")
-
-    _nil = CORBA.Object._nil
-
-
-_0_INF1822.MasterDevice = MasterDevice
-_0_INF1822._tc_MasterDevice = omniORB.tcInternal.createTypeCode(_0_INF1822._d_MasterDevice)
-omniORB.registerType(MasterDevice._NP_RepositoryId, _0_INF1822._d_MasterDevice, _0_INF1822._tc_MasterDevice)
-
-# MasterDevice object reference
-class _objref_MasterDevice (_0_INF1822._objref_Device):
-    _NP_RepositoryId = MasterDevice._NP_RepositoryId
-
-    def __init__(self, obj):
-        _0_INF1822._objref_Device.__init__(self, obj)
-
-omniORB.registerObjref(MasterDevice._NP_RepositoryId, _objref_MasterDevice)
-_0_INF1822._objref_MasterDevice = _objref_MasterDevice
-del MasterDevice, _objref_MasterDevice
-
-# MasterDevice skeleton
-__name__ = "INF1822__POA"
-class MasterDevice (_0_INF1822__POA.Device):
-    _NP_RepositoryId = _0_INF1822.MasterDevice._NP_RepositoryId
-
-
-    _omni_op_d = {}
-    _omni_op_d.update(_0_INF1822__POA.Device._omni_op_d)
-
-MasterDevice._omni_skeleton = MasterDevice
-_0_INF1822__POA.MasterDevice = MasterDevice
-omniORB.registerSkeleton(MasterDevice._NP_RepositoryId, MasterDevice)
-del MasterDevice
-__name__ = "INF1822"
-
 # interface LightDevice
 _0_INF1822._d_LightDevice = (omniORB.tcInternal.tv_objref, "IDL:INF1822/LightDevice:1.0", "LightDevice")
 omniORB.typeMapping["IDL:INF1822/LightDevice:1.0"] = _0_INF1822._d_LightDevice
 _0_INF1822.LightDevice = omniORB.newEmptyClass()
-class LightDevice (_0_INF1822.SensorDevice):
+class LightDevice (_0_INF1822.Device):
     _NP_RepositoryId = _0_INF1822._d_LightDevice[1]
 
     def __init__(self, *args, **kw):
@@ -203,11 +144,11 @@ LightDevice._d__get_lightLevel = ((),(omniORB.tcInternal.tv_long,),None)
 LightDevice._d__set_lightLevel = ((omniORB.tcInternal.tv_long,),(),None)
 
 # LightDevice object reference
-class _objref_LightDevice (_0_INF1822._objref_SensorDevice):
+class _objref_LightDevice (_0_INF1822._objref_Device):
     _NP_RepositoryId = LightDevice._NP_RepositoryId
 
     def __init__(self, obj):
-        _0_INF1822._objref_SensorDevice.__init__(self, obj)
+        _0_INF1822._objref_Device.__init__(self, obj)
 
     def _get_lightLevel(self, *args):
         return self._obj.invoke("_get_lightLevel", _0_INF1822.LightDevice._d__get_lightLevel, args)
@@ -224,12 +165,12 @@ del LightDevice, _objref_LightDevice
 
 # LightDevice skeleton
 __name__ = "INF1822__POA"
-class LightDevice (_0_INF1822__POA.SensorDevice):
+class LightDevice (_0_INF1822__POA.Device):
     _NP_RepositoryId = _0_INF1822.LightDevice._NP_RepositoryId
 
 
     _omni_op_d = {"_get_lightLevel": _0_INF1822.LightDevice._d__get_lightLevel, "_set_lightLevel": _0_INF1822.LightDevice._d__set_lightLevel}
-    _omni_op_d.update(_0_INF1822__POA.SensorDevice._omni_op_d)
+    _omni_op_d.update(_0_INF1822__POA.Device._omni_op_d)
 
 LightDevice._omni_skeleton = LightDevice
 _0_INF1822__POA.LightDevice = LightDevice
@@ -237,12 +178,12 @@ omniORB.registerSkeleton(LightDevice._NP_RepositoryId, LightDevice)
 del LightDevice
 __name__ = "INF1822"
 
-# interface MovementDevice
-_0_INF1822._d_MovementDevice = (omniORB.tcInternal.tv_objref, "IDL:INF1822/MovementDevice:1.0", "MovementDevice")
-omniORB.typeMapping["IDL:INF1822/MovementDevice:1.0"] = _0_INF1822._d_MovementDevice
-_0_INF1822.MovementDevice = omniORB.newEmptyClass()
-class MovementDevice (_0_INF1822.SensorDevice):
-    _NP_RepositoryId = _0_INF1822._d_MovementDevice[1]
+# interface MasterLightDevice
+_0_INF1822._d_MasterLightDevice = (omniORB.tcInternal.tv_objref, "IDL:INF1822/MasterLightDevice:1.0", "MasterLightDevice")
+omniORB.typeMapping["IDL:INF1822/MasterLightDevice:1.0"] = _0_INF1822._d_MasterLightDevice
+_0_INF1822.MasterLightDevice = omniORB.newEmptyClass()
+class MasterLightDevice (_0_INF1822.LightDevice):
+    _NP_RepositoryId = _0_INF1822._d_MasterLightDevice[1]
 
     def __init__(self, *args, **kw):
         raise RuntimeError("Cannot construct objects of this type.")
@@ -250,40 +191,112 @@ class MovementDevice (_0_INF1822.SensorDevice):
     _nil = CORBA.Object._nil
 
 
-_0_INF1822.MovementDevice = MovementDevice
-_0_INF1822._tc_MovementDevice = omniORB.tcInternal.createTypeCode(_0_INF1822._d_MovementDevice)
-omniORB.registerType(MovementDevice._NP_RepositoryId, _0_INF1822._d_MovementDevice, _0_INF1822._tc_MovementDevice)
+_0_INF1822.MasterLightDevice = MasterLightDevice
+_0_INF1822._tc_MasterLightDevice = omniORB.tcInternal.createTypeCode(_0_INF1822._d_MasterLightDevice)
+omniORB.registerType(MasterLightDevice._NP_RepositoryId, _0_INF1822._d_MasterLightDevice, _0_INF1822._tc_MasterLightDevice)
 
-# MovementDevice operations and attributes
-MovementDevice._d_hasMovement = ((), (), None)
+# MasterLightDevice operations and attributes
+MasterLightDevice._d_startMonitoringDevice = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), (omniORB.tcInternal.tv_boolean, ), None)
 
-# MovementDevice object reference
-class _objref_MovementDevice (_0_INF1822._objref_SensorDevice):
-    _NP_RepositoryId = MovementDevice._NP_RepositoryId
+# MasterLightDevice object reference
+class _objref_MasterLightDevice (_0_INF1822._objref_LightDevice):
+    _NP_RepositoryId = MasterLightDevice._NP_RepositoryId
 
     def __init__(self, obj):
-        _0_INF1822._objref_SensorDevice.__init__(self, obj)
+        _0_INF1822._objref_LightDevice.__init__(self, obj)
 
-    def hasMovement(self, *args):
-        return self._obj.invoke("hasMovement", _0_INF1822.MovementDevice._d_hasMovement, args)
+    def startMonitoringDevice(self, *args):
+        return self._obj.invoke("startMonitoringDevice", _0_INF1822.MasterLightDevice._d_startMonitoringDevice, args)
 
-omniORB.registerObjref(MovementDevice._NP_RepositoryId, _objref_MovementDevice)
-_0_INF1822._objref_MovementDevice = _objref_MovementDevice
-del MovementDevice, _objref_MovementDevice
+omniORB.registerObjref(MasterLightDevice._NP_RepositoryId, _objref_MasterLightDevice)
+_0_INF1822._objref_MasterLightDevice = _objref_MasterLightDevice
+del MasterLightDevice, _objref_MasterLightDevice
 
-# MovementDevice skeleton
+# MasterLightDevice skeleton
 __name__ = "INF1822__POA"
-class MovementDevice (_0_INF1822__POA.SensorDevice):
-    _NP_RepositoryId = _0_INF1822.MovementDevice._NP_RepositoryId
+class MasterLightDevice (_0_INF1822__POA.LightDevice):
+    _NP_RepositoryId = _0_INF1822.MasterLightDevice._NP_RepositoryId
 
 
-    _omni_op_d = {"hasMovement": _0_INF1822.MovementDevice._d_hasMovement}
-    _omni_op_d.update(_0_INF1822__POA.SensorDevice._omni_op_d)
+    _omni_op_d = {"startMonitoringDevice": _0_INF1822.MasterLightDevice._d_startMonitoringDevice}
+    _omni_op_d.update(_0_INF1822__POA.LightDevice._omni_op_d)
 
-MovementDevice._omni_skeleton = MovementDevice
-_0_INF1822__POA.MovementDevice = MovementDevice
-omniORB.registerSkeleton(MovementDevice._NP_RepositoryId, MovementDevice)
-del MovementDevice
+MasterLightDevice._omni_skeleton = MasterLightDevice
+_0_INF1822__POA.MasterLightDevice = MasterLightDevice
+omniORB.registerSkeleton(MasterLightDevice._NP_RepositoryId, MasterLightDevice)
+del MasterLightDevice
+__name__ = "INF1822"
+
+# interface Catalogue
+_0_INF1822._d_Catalogue = (omniORB.tcInternal.tv_objref, "IDL:INF1822/Catalogue:1.0", "Catalogue")
+omniORB.typeMapping["IDL:INF1822/Catalogue:1.0"] = _0_INF1822._d_Catalogue
+_0_INF1822.Catalogue = omniORB.newEmptyClass()
+class Catalogue :
+    _NP_RepositoryId = _0_INF1822._d_Catalogue[1]
+
+    def __init__(self, *args, **kw):
+        raise RuntimeError("Cannot construct objects of this type.")
+
+    _nil = CORBA.Object._nil
+
+
+_0_INF1822.Catalogue = Catalogue
+_0_INF1822._tc_Catalogue = omniORB.tcInternal.createTypeCode(_0_INF1822._d_Catalogue)
+omniORB.registerType(Catalogue._NP_RepositoryId, _0_INF1822._d_Catalogue, _0_INF1822._tc_Catalogue)
+
+# Catalogue operations and attributes
+Catalogue._d_register = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], (omniORB.tcInternal.tv_string,0), omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"]), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_registerMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"]), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_deregister = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], (omniORB.tcInternal.tv_string,0)), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_deregisterMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_getByName = (((omniORB.tcInternal.tv_string,0), ), (omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), None)
+Catalogue._d_getByType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], ), (omniORB.typeMapping["IDL:INF1822/IORList:1.0"], ), None)
+Catalogue._d_getMasterForType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], ), (omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), None)
+
+# Catalogue object reference
+class _objref_Catalogue (CORBA.Object):
+    _NP_RepositoryId = Catalogue._NP_RepositoryId
+
+    def __init__(self, obj):
+        CORBA.Object.__init__(self, obj)
+
+    def register(self, *args):
+        return self._obj.invoke("register", _0_INF1822.Catalogue._d_register, args)
+
+    def registerMaster(self, *args):
+        return self._obj.invoke("registerMaster", _0_INF1822.Catalogue._d_registerMaster, args)
+
+    def deregister(self, *args):
+        return self._obj.invoke("deregister", _0_INF1822.Catalogue._d_deregister, args)
+
+    def deregisterMaster(self, *args):
+        return self._obj.invoke("deregisterMaster", _0_INF1822.Catalogue._d_deregisterMaster, args)
+
+    def getByName(self, *args):
+        return self._obj.invoke("getByName", _0_INF1822.Catalogue._d_getByName, args)
+
+    def getByType(self, *args):
+        return self._obj.invoke("getByType", _0_INF1822.Catalogue._d_getByType, args)
+
+    def getMasterForType(self, *args):
+        return self._obj.invoke("getMasterForType", _0_INF1822.Catalogue._d_getMasterForType, args)
+
+omniORB.registerObjref(Catalogue._NP_RepositoryId, _objref_Catalogue)
+_0_INF1822._objref_Catalogue = _objref_Catalogue
+del Catalogue, _objref_Catalogue
+
+# Catalogue skeleton
+__name__ = "INF1822__POA"
+class Catalogue (PortableServer.Servant):
+    _NP_RepositoryId = _0_INF1822.Catalogue._NP_RepositoryId
+
+
+    _omni_op_d = {"register": _0_INF1822.Catalogue._d_register, "registerMaster": _0_INF1822.Catalogue._d_registerMaster, "deregister": _0_INF1822.Catalogue._d_deregister, "deregisterMaster": _0_INF1822.Catalogue._d_deregisterMaster, "getByName": _0_INF1822.Catalogue._d_getByName, "getByType": _0_INF1822.Catalogue._d_getByType, "getMasterForType": _0_INF1822.Catalogue._d_getMasterForType}
+
+Catalogue._omni_skeleton = Catalogue
+_0_INF1822__POA.Catalogue = Catalogue
+omniORB.registerSkeleton(Catalogue._NP_RepositoryId, Catalogue)
+del Catalogue
 __name__ = "INF1822"
 
 #

@@ -1,22 +1,76 @@
+
 module INF1822 {
+
+	// ==================================================
+	//
+	//	Types
+	//
+	// ==================================================
+
+	// Um IOR
+	typedef string IOR;
+
+	// Uma lista de IORs
+	typedef sequence<IOR> IORList;
+
+	// ==================================================
+	//
+	//	Main
+	//
+	// ==================================================
+
+	enum DeviceType {
+		MasterLightDeviceType,
+		LightDeviceType
+	};
+
 	interface Device {
 		attribute unsigned long id;
-		attribute string type;
+		attribute DeviceType type;
 	};
 
-	interface SensorDevice: Device {
-		void startMonitoring();
-	};
-
-	interface MasterDevice: Device {
-		// ?
-	};
-
-	interface LightDevice: SensorDevice {
+	interface LightDevice: Device {
 		attribute long lightLevel;
 	};
 
-	interface MovementDevice: SensorDevice {
-		void hasMovement();
+	interface MasterLightDevice: LightDevice {
+		boolean startMonitoringDevice(in IOR deviceIor);
+	};
+
+	// ==================================================
+	//
+	//	Naming Service
+	//
+	// ==================================================
+
+	// Implementação de um serviço de catálogo
+	interface Catalogue {
+		// Usado por um objeto para se registrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean register(in IOR deviceIor, in string name, in DeviceType type);
+
+		// Usado por um objeto "master" para se registrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean registerMaster(in IOR deviceIor, in DeviceType type);
+
+		// Usado por um objeto para se desregistrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean deregister(in IOR deviceIor, in string name);
+
+		// Usado por um objeto "master" para se desregistrar junto ao serviço.
+		// Pode retornar false caso algum erro tenha ocorrido.
+		boolean deregisterMaster(in IOR deviceIor);
+
+		// Retorna o IOR de um objeto dado seu nome.
+		// Pode retornar um erro caso o objeto não exista.
+		IOR getByName(in string name);
+
+		// Retorna uma lista de IORs de objetos registrados pertencentes
+		// ao tipo passado. Pode retornar uma lista vazia.
+		IORList getByType(in DeviceType type);
+
+		// Retorna o IOR de um objeto que é o "master" de seu tipo. 
+		// Pode retornar um erro caso o objeto não exista.
+		IOR getMasterForType(in DeviceType type);
 	};
 };
