@@ -25,7 +25,7 @@ lightDeviceServant = aux.LightDeviceImpl(deviceId, INF1822.LightDeviceType, [10,
 	20, 30, 40, 30, 20])
 
 # Initializing the naming service
-catalogueIor = aux.readIorFromFile("naming-service-ior.txt")
+catalogueIor = aux.readIorFromFile("catalogue-ior.txt")
 catalogue = orbManager.getStubFrom(catalogueIor, INF1822.Catalogue)
 if catalogue is None:
 	print("Error with catalogue reference")
@@ -33,9 +33,9 @@ if catalogue is None:
 
 # Getting the master from the catalogue
 try:
-	masterIor = catalogue.getMasterForType(lightDeviceServant.type)
-except CORBA.TRANSIENT:
-	print("Error catalogue.getMasterForType (CORBA.TRANSIENT)")
+	masterIor = catalogue.getMasterForType(lightDeviceServant.type, clusterId)
+except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+	print("Error catalogue.getMasterForType (CORBA Exception)")
 	sys.exit(1)
 if not masterIor:
 	print("Error master not registered")
@@ -47,11 +47,11 @@ if not master:
 
 # Registering the light device in the catalogue
 lightDeviceIor = orbManager.getIorFrom(lightDeviceServant)
-lightDeviceName = "light" + str(lightDeviceServant.id)
 try:
-	ok = catalogue.register(lightDeviceIor, lightDeviceName, INF1822.LightDeviceType);
-except CORBA.TRANSIENT:
-	print("Error catalogue.register (CORBA.TRANSIENT)")
+	ok = catalogue.register(lightDeviceIor, lightDeviceServant.id,
+		INF1822.LightDeviceType, clusterId);
+except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+	print("Error catalogue.register (CORBA Exception)")
 	sys.exit(1)
 if not ok:
 	print("Error with registering of light device")
@@ -61,8 +61,8 @@ if not ok:
 lightDeviceServant.start()
 try:
 	ok = master.startMonitoringDevice(lightDeviceIor)
-except CORBA.TRANSIENT:
-	print("Error master.startMonitoringDevice (CORBA.TRANSIENT)")
+except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+	print("Error master.startMonitoringDevice (CORBA Exception)")
 	sys.exit(1)
 if not ok:
 	print("Error when starting to monitor a light device")
