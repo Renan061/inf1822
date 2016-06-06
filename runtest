@@ -2,7 +2,7 @@
 
 echo "Starting test"
 
-python naming-service.py &
+python catalogue.py &
 sleep 1
 python master.py &
 
