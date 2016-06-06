@@ -14,8 +14,8 @@ class CatalogueImpl(INF1822__POA.Catalogue):
 	# Default constructor
 	def __init__(self):
 		self._clusterDictionary = {}
+		self._masterIdDictionary = {}
 		self._lock = threading.Lock()
-		self._masterId = 0
 
 	def register(self, deviceIor, id, type, clusterId):
 		if not isinstance(deviceIor, basestring) or not isinstance(id, long):
@@ -35,13 +35,20 @@ class CatalogueImpl(INF1822__POA.Catalogue):
 		self._clusterDictionary[clusterId][type][id] = deviceIor
 		self._lock.release()
 
-		print("Registered device with id <" + id + ">")
+		print("Registered device <" + str(id) + "> in cluster <" + str(clusterId) + ">")
 		return True
 
-	def registerMaster(self, deviceIor, type, clusterId):
-		# NOTE: If there was another master, this would fail.
-		# Should force rewriting when registering another master.
-		return self.register(deviceIor, self._masterId, type, clusterId)
+	def registerMaster(self, deviceIor, id, type, clusterId):
+		ok = self.register(deviceIor, id, type, clusterId)
+
+		if ok:
+			self._lock.acquire()
+			if not self._masterIdDictionary.has_key(clusterId):
+				self._masterIdDictionary[clusterId] = {}
+			self._masterIdDictionary[clusterId][type] = id
+			self._lock.release()
+			
+		return ok
 
 	def deregister(self, deviceIor, id, type, clusterId):
 		value = False
@@ -55,13 +62,21 @@ class CatalogueImpl(INF1822__POA.Catalogue):
 					if len(typeDictionary) is 0:
 						del self._clusterDictionary[clusterKey]
 					value = True
-					print("Deregistered device with id <" + id + ">")
+					print("Deregistered device <" + str(id) + "> in cluster <" + str(clusterId) + ">")
 					break
 		self._lock.release()
 		return value
 
-	def deregisterMaster(self, deviceIor, type, clusterId):
-		return self.deregister(deviceIor, self._masterId, type, clusterId)
+	def deregisterMaster(self, deviceIor, id, type, clusterId):
+		ok = self.deregister(deviceIor, id, type, clusterId)
+
+		if ok:
+			self._lock.acquire()
+			if self._masterIdDictionary.has_key(clusterId):
+				del self._masterIdDictionary[clusterId]
+			self._lock.release()
+
+		return ok
 
 	def getByType(self, type, clusterId):
 		iorList = []
@@ -84,7 +99,7 @@ class CatalogueImpl(INF1822__POA.Catalogue):
 			self._lock.release()
 			return ""
 
-		value = idDictionary.get(self._masterName)
+		value = idDictionary.get(self._masterIdDictionary[clusterId][type])
 		self._lock.release()
 		if value is None:
 			return ""

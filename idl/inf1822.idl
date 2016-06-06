@@ -52,8 +52,8 @@ module INF1822 {
 
 		// Usado por um objeto "master" para se registrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean registerMaster(in IOR deviceIor, in DeviceType type,
-			in unsigned long clusterId);
+		boolean registerMaster(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Usado por um objeto para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
@@ -62,8 +62,8 @@ module INF1822 {
 
 		// Usado por um objeto "master" para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean deregisterMaster(in IOR deviceIor, in DeviceType type,
-			in unsigned long clusterId);
+		boolean deregisterMaster(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Retorna uma lista de IORs de objetos registrados pertencentes
 		// ao tipo passado. Pode retornar uma lista vazia.

@@ -10,7 +10,7 @@ from omniORB import CORBA
 #
 # ==================================================
 
-# Check for parameter
+# Checking for parameters
 if len(sys.argv) != 3:
 	print "First parameter must be clusterId and second parameter must be deviceId..."
 	sys.exit(1)
@@ -34,7 +34,7 @@ if catalogue is None:
 # Getting the master from the catalogue
 try:
 	masterIor = catalogue.getMasterForType(lightDeviceServant.type, clusterId)
-except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+except:
 	print("Error catalogue.getMasterForType (CORBA Exception)")
 	sys.exit(1)
 if not masterIor:
@@ -50,7 +50,7 @@ lightDeviceIor = orbManager.getIorFrom(lightDeviceServant)
 try:
 	ok = catalogue.register(lightDeviceIor, lightDeviceServant.id,
 		INF1822.LightDeviceType, clusterId);
-except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+except:
 	print("Error catalogue.register (CORBA Exception)")
 	sys.exit(1)
 if not ok:
@@ -61,7 +61,7 @@ if not ok:
 lightDeviceServant.start()
 try:
 	ok = master.startMonitoringDevice(lightDeviceIor)
-except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+except:
 	print("Error master.startMonitoringDevice (CORBA Exception)")
 	sys.exit(1)
 if not ok:
