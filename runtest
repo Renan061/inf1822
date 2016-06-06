@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Starting test"
+
+python naming-service.py &
+sleep 1
+python master.py &
+
+for i in `seq 0 $1`
+do
+	sleep 1
+    python client.py $i &
+done

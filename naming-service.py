@@ -24,6 +24,9 @@ class CatalogueImpl(INF1822__POA.Catalogue):
 		self._lock.acquire()
 		if not self._typeDictionary.has_key(type):
 			self._typeDictionary[type] = {}
+		if self._typeDictionary[type].has_key(name):
+			self._lock.release()
+			return False
 		self._typeDictionary[type][name] = deviceIor
 		self._lock.release()
 

@@ -10,30 +10,41 @@ from omniORB import CORBA
 #
 # ==================================================
 
-print "Client started..."
+# Check for parameter
+if len(sys.argv) != 2:
+	print "First parameter must be deviceId..."
+	sys.exit(1)
+deviceId = int(sys.argv[1])
 
-# Setup
+# Setup - ORB and light device servant
 orbManager = aux.ORBManager()
 orbManager.initializePoa()
 orbManager.activatePoa()
-lightDeviceServant = aux.LightDeviceImpl(2, INF1822.LightDeviceType, [10, 20,
-	30, 40])
+lightDeviceServant = aux.LightDeviceImpl(deviceId, INF1822.LightDeviceType, [10,
+	20, 30, 40, 30, 20])
 
-# Naming service
+# Initializing the naming service
 catalogueIor = aux.readIorFromFile("naming-service-ior.txt")
 catalogue = orbManager.getStubFrom(catalogueIor, INF1822.Catalogue)
 if catalogue is None:
 	print("Error with catalogue reference")
 	sys.exit(1)
 
-# MasterLightDevice
-masterIor = catalogue.getMasterForType(lightDeviceServant.type)
+# Getting the master from the catalogue
+try:
+	masterIor = catalogue.getMasterForType(lightDeviceServant.type)
+except CORBA.TRANSIENT:
+	print("Error catalogue.getMasterForType (CORBA.TRANSIENT)")
+	sys.exit(1)
 if not masterIor:
 	print("Error master not registered")
 	sys.exit(1)
 master = orbManager.getStubFrom(masterIor, INF1822.MasterLightDevice)
+if not master:
+	print("Error with master reference")
+	sys.exit(1)
 
-# LightDevice
+# Registering the light device in the catalogue
 lightDeviceIor = orbManager.getIorFrom(lightDeviceServant)
 lightDeviceName = "light" + str(lightDeviceServant.id)
 try:
@@ -45,16 +56,16 @@ if not ok:
 	print("Error with registering of light device")
 	sys.exit(1)
 
-if not master:
-	print("Error with master reference")
+# Telling the master to start monitoring the device
+lightDeviceServant.start()
+try:
+	ok = master.startMonitoringDevice(lightDeviceIor)
+except CORBA.TRANSIENT:
+	print("Error master.startMonitoringDevice (CORBA.TRANSIENT)")
 	sys.exit(1)
-
-# Doing something
-ok = master.startMonitoringDevice(lightDeviceIor)
 if not ok:
 	print("Error when starting to monitor a light device")
 	sys.exit(1)
-lightDeviceServant.start()
 
 # Running
 orbManager.runOrb()
