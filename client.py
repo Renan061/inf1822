@@ -11,10 +11,11 @@ from omniORB import CORBA
 # ==================================================
 
 # Check for parameter
-if len(sys.argv) != 2:
-	print "First parameter must be deviceId..."
+if len(sys.argv) != 3:
+	print "First parameter must be clusterId and second parameter must be deviceId..."
 	sys.exit(1)
-deviceId = int(sys.argv[1])
+clusterId = int(sys.argv[1])
+deviceId = int(sys.argv[2])
 
 # Setup - ORB and light device servant
 orbManager = aux.ORBManager()
