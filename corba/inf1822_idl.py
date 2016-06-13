@@ -245,13 +245,12 @@ _0_INF1822._tc_Catalogue = omniORB.tcInternal.createTypeCode(_0_INF1822._d_Catal
 omniORB.registerType(Catalogue._NP_RepositoryId, _0_INF1822._d_Catalogue, _0_INF1822._tc_Catalogue)
 
 # Catalogue operations and attributes
-Catalogue._d_register = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], (omniORB.tcInternal.tv_string,0), omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"]), (omniORB.tcInternal.tv_boolean, ), None)
-Catalogue._d_registerMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"]), (omniORB.tcInternal.tv_boolean, ), None)
-Catalogue._d_deregister = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], (omniORB.tcInternal.tv_string,0)), (omniORB.tcInternal.tv_boolean, ), None)
-Catalogue._d_deregisterMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), (omniORB.tcInternal.tv_boolean, ), None)
-Catalogue._d_getByName = (((omniORB.tcInternal.tv_string,0), ), (omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), None)
-Catalogue._d_getByType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], ), (omniORB.typeMapping["IDL:INF1822/IORList:1.0"], ), None)
-Catalogue._d_getMasterForType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], ), (omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), None)
+Catalogue._d_register = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.tcInternal.tv_ulong, omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_registerMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.tcInternal.tv_ulong, omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_deregister = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.tcInternal.tv_ulong, omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_deregisterMaster = ((omniORB.typeMapping["IDL:INF1822/IOR:1.0"], omniORB.tcInternal.tv_ulong, omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.tcInternal.tv_boolean, ), None)
+Catalogue._d_getByType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.typeMapping["IDL:INF1822/IORList:1.0"], ), None)
+Catalogue._d_getMasterForType = ((omniORB.typeMapping["IDL:INF1822/DeviceType:1.0"], omniORB.tcInternal.tv_ulong), (omniORB.typeMapping["IDL:INF1822/IOR:1.0"], ), None)
 
 # Catalogue object reference
 class _objref_Catalogue (CORBA.Object):
@@ -272,9 +271,6 @@ class _objref_Catalogue (CORBA.Object):
     def deregisterMaster(self, *args):
         return self._obj.invoke("deregisterMaster", _0_INF1822.Catalogue._d_deregisterMaster, args)
 
-    def getByName(self, *args):
-        return self._obj.invoke("getByName", _0_INF1822.Catalogue._d_getByName, args)
-
     def getByType(self, *args):
         return self._obj.invoke("getByType", _0_INF1822.Catalogue._d_getByType, args)
 
@@ -291,7 +287,7 @@ class Catalogue (PortableServer.Servant):
     _NP_RepositoryId = _0_INF1822.Catalogue._NP_RepositoryId
 
 
-    _omni_op_d = {"register": _0_INF1822.Catalogue._d_register, "registerMaster": _0_INF1822.Catalogue._d_registerMaster, "deregister": _0_INF1822.Catalogue._d_deregister, "deregisterMaster": _0_INF1822.Catalogue._d_deregisterMaster, "getByName": _0_INF1822.Catalogue._d_getByName, "getByType": _0_INF1822.Catalogue._d_getByType, "getMasterForType": _0_INF1822.Catalogue._d_getMasterForType}
+    _omni_op_d = {"register": _0_INF1822.Catalogue._d_register, "registerMaster": _0_INF1822.Catalogue._d_registerMaster, "deregister": _0_INF1822.Catalogue._d_deregister, "deregisterMaster": _0_INF1822.Catalogue._d_deregisterMaster, "getByType": _0_INF1822.Catalogue._d_getByType, "getMasterForType": _0_INF1822.Catalogue._d_getMasterForType}
 
 Catalogue._omni_skeleton = Catalogue
 _0_INF1822__POA.Catalogue = Catalogue

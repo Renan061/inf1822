@@ -47,30 +47,30 @@ module INF1822 {
 	interface Catalogue {
 		// Usado por um objeto para se registrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean register(in IOR deviceIor, in string name, in DeviceType type);
+		boolean register(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Usado por um objeto "master" para se registrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean registerMaster(in IOR deviceIor, in DeviceType type);
+		boolean registerMaster(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Usado por um objeto para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean deregister(in IOR deviceIor, in string name);
+		boolean deregister(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Usado por um objeto "master" para se desregistrar junto ao serviço.
 		// Pode retornar false caso algum erro tenha ocorrido.
-		boolean deregisterMaster(in IOR deviceIor);
-
-		// Retorna o IOR de um objeto dado seu nome.
-		// Pode retornar um erro caso o objeto não exista.
-		IOR getByName(in string name);
+		boolean deregisterMaster(in IOR deviceIor, in unsigned long id,
+			in DeviceType type, in unsigned long clusterId);
 
 		// Retorna uma lista de IORs de objetos registrados pertencentes
 		// ao tipo passado. Pode retornar uma lista vazia.
-		IORList getByType(in DeviceType type);
+		IORList getByType(in DeviceType type, in unsigned long clusterId);
 
 		// Retorna o IOR de um objeto que é o "master" de seu tipo. 
 		// Pode retornar um erro caso o objeto não exista.
-		IOR getMasterForType(in DeviceType type);
+		IOR getMasterForType(in DeviceType type, in unsigned long clusterId);
 	};
 };

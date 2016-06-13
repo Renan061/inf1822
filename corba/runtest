@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Starting test"
+
+python catalogue.py &
+sleep 1
+python master.py 1 0 &
+
+for i in `seq 1 $1`
+do
+	sleep 1
+    python client.py 1 $i &
+done
