@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import socket
-import threading
+import socket, threading
+import messages
 
 # ==================================================
 #
@@ -104,11 +104,10 @@ class Catalogue:
 			return ""
 		return value
 
-# ==================================================
-#
-#	Parsing
-#
-# ==================================================
+	def parseMessage(self, message):
+		if isinstance(message, messages.CatalogueRegisterMessage):
+			deviceAddress = str(message.host) + "-" + str(message.port)
+			return self.register(deviceAddress, message.id, message.type, message.clusterId)
 
 # ==================================================
 #
@@ -140,10 +139,11 @@ while True:
     	data = clientSocket.recv(4096)
     	if data:
     		message += data
-    		print("Received: ", data)
+    		# print("Received: ", data)
     	else:
-    		print("Stoped receiving...")
+    		# print("Stoped receiving...")
     		break
-    print("Final message: " + message)
+    message = messages.CatalogueRegisterMessage(message)
+    print(catalogue.parseMessage(message))
 
     clientSocket.close()
