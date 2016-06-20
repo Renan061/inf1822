@@ -1,8 +1,72 @@
 #!/usr/bin/env python
 
-import sys
+import sys, threading, time
 import aux, INF1822
 from omniORB import CORBA
+import INF1822, INF1822__POA
+
+# ==================================================
+#
+#	MasterLightDevice
+#
+# ==================================================
+
+class MasterLightDeviceImpl(INF1822__POA.MasterLightDevice):
+	# Default constructor
+	def __init__(self, orbManager, id, type, clusterId):
+		self._orbManager = orbManager
+		self._deviceList = []
+		self._lock = threading.Lock()
+		self.id = id
+		self.type = type
+		self.clusterId = clusterId
+		self.lightLevel = 0
+
+	def startMonitoringDevice(self, deviceIor):
+		device = self._orbManager.getStubFrom(deviceIor, INF1822.LightDevice)
+		if device is None:
+			return False
+		self._lock.acquire()
+		self._deviceList.append(device)
+		self._lock.release()
+		print("Started monitoring device " + str(device.id))
+		return True
+
+	def start(self):
+		try:
+			threading.Thread(target=self._monitor).start()
+		except:
+			print "Unable to start new thread"
+		
+	def _monitor(self):
+		while True:
+			deviceIdList = self._refreshGlobalLightLevel()
+			value = "none" if len(deviceIdList) == 0 else ", ".join([str(i) for i in deviceIdList])
+			print("====================")			
+			print("Registered devices used to calculate the global " +
+				"light level of cluster <" + str(self.clusterId) +
+				">: [" + value + "]")
+			print("Global light level: " + str(self.lightLevel))
+			print("====================")
+			time.sleep(5)
+
+	def _refreshGlobalLightLevel(self):
+		value = 0
+		deviceIdList = [] # Only used for logging purposes (shouldn't be in production)
+
+		self._lock.acquire()
+		for device in self._deviceList:
+			try:
+				value += device.lightLevel
+				deviceIdList.append(device.id)
+			except (CORBA.TRANSIENT, CORBA.COMM_FAILURE):
+				print("Could not get light level for one of the devices")
+		deviceListLength = len(self._deviceList)
+		self._lock.release()
+
+		if deviceListLength != 0:
+			self.lightLevel = value / deviceListLength
+		return deviceIdList
 
 # ==================================================
 #
@@ -30,8 +94,8 @@ if catalogue is None:
 	sys.exit(1)
 
 # Registering the master light device in the catalogue
-masterServant = aux.MasterLightDeviceImpl(orbManager, deviceId,
-	INF1822.MasterLightDeviceType)
+masterServant = MasterLightDeviceImpl(orbManager, deviceId,
+	INF1822.MasterLightDeviceType, clusterId)
 masterIor = orbManager.getIorFrom(masterServant)
 try:
 	ok = catalogue.registerMaster(masterIor, masterServant.id,

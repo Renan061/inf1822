@@ -2,12 +2,25 @@
 
 echo "Starting test"
 
-python catalogue.py &
-sleep 1
-python master.py 1 0 &
-
-for i in `seq 1 $1`
-do
+if [ "$1" = "" ]
+then
+	echo "First parameter must be number of clusters..."
+elif [ "$2" = "" ]
+then
+	echo "Second parameter must be number of clients for each cluster..."
+else
+	python catalogue.py &
 	sleep 1
-    python client.py 1 $i &
-done
+
+	# Clusters
+	for i in `seq 1 $1`
+	do
+		python master.py $i 0 &
+		# Clients
+		for j in `seq 1 $2`
+		do
+			sleep 1
+		    python client.py $i $(($j+($i*100))) &
+		done
+	done
+fi
