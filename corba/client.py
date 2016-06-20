@@ -1,8 +1,41 @@
 #!/usr/bin/env python
 
-import sys
+import sys, threading, time
 import aux, INF1822
 from omniORB import CORBA
+import INF1822, INF1822__POA
+
+# ==================================================
+#
+#	LightDevice
+#
+# ==================================================
+
+class LightDeviceImpl(INF1822__POA.LightDevice):
+	# Default constructor
+	def __init__(self, id, type, clusterId, values):
+		self.id = id
+		self.type = type
+		self.clusterId = clusterId
+		self.lightLevel = 0
+		self.values = values
+		self.index = 0
+
+	# Starts a new thread
+	def start(self):
+		try:
+			threading.Thread(target=self._listen).start()
+		except:
+			print "Unable to start new thread"
+
+	# Stub
+	def _listen(self):
+		while True:
+			value = self.values[self.index]
+			self.lightLevel = value
+			# print "Device " + str(self.id) + " - Valor de luminosidade lido: " + str(value)
+			self.index = 0 if self.index == len(self.values) - 1 else self.index + 1
+			time.sleep(1)
 
 # ==================================================
 #
@@ -21,8 +54,8 @@ deviceId = int(sys.argv[2])
 orbManager = aux.ORBManager()
 orbManager.initializePoa()
 orbManager.activatePoa()
-lightDeviceServant = aux.LightDeviceImpl(deviceId, INF1822.LightDeviceType, [10,
-	20, 30, 40, 30, 20])
+lightDeviceServant = LightDeviceImpl(deviceId, INF1822.LightDeviceType,
+	clusterId, [10, 20, 30, 40, 30, 20])
 
 # Initializing the naming service
 catalogueIor = aux.readIorFromFile("catalogue-ior.txt")
