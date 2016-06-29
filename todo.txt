@@ -1,4 +1,0 @@
-- Prioridade: Terminar relatório
-- Paralelo
-	- Terminar sockets
-	- Instalar no raspberry

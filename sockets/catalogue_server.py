@@ -104,11 +104,6 @@ class Catalogue:
 			return ""
 		return value
 
-	def parseMessage(self, message):
-		if isinstance(message, messages.CatalogueRegisterMessage):
-			deviceAddress = str(message.host) + "-" + str(message.port)
-			return self.register(deviceAddress, message.id, message.type, message.clusterId)
-
 # ==================================================
 #
 #	Sockets
@@ -116,7 +111,7 @@ class Catalogue:
 # ==================================================
 
 # Setup
-serverAddress = ("localhost", 1984)
+serverAddress = (socket.gethostname(), 1984)
 
 # Socket
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -129,21 +124,32 @@ catalogue = Catalogue()
 print("New server on: " + str(serverAddress))
 
 while True:
-    # Accepts connections from outside
+    # Accepts connections
     (clientSocket, address) = serverSocket.accept()
     print("New connection with: " + str(address))
 
-    # Does something with the clientSocket
+    # Receives the message in pieces, if necessary
     message = ""
     while True:
     	data = clientSocket.recv(4096)
     	if data:
     		message += data
-    		# print("Received: ", data)
     	else:
-    		# print("Stoped receiving...")
     		break
-    message = messages.CatalogueRegisterMessage(message)
-    print(catalogue.parseMessage(message))
+
+    # Parsing the message
+    catalogueMessage = messages.parse(message)
+    if isinstance(catalogueMessage, messages.Register):
+    	catalogue.register(
+    		catalogueMessage.host + ":" + str(catalogueMessage.port),
+    		catalogueMessage.id, catalogueMessage.type,
+    		catalogueMessage.clusterId)
+    elif isinstance(catalogueMessage, messages.RegisterMaster):
+    	catalogue.registerMaster(
+    		catalogueMessage.host + ":" + str(catalogueMessage.port),
+    		catalogueMessage.id, catalogueMessage.type,
+    		catalogueMessage.clusterId)
+    else:
+    	pass # ...
 
     clientSocket.close()

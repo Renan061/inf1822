@@ -1,4 +1,4 @@
-- ./runtest 10
+- ./runtest 3 9
 	- chmod u+x runtest (caso não tenha permissão)
 
 - PyInstaller
